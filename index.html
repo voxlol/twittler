@@ -36,9 +36,23 @@
 
           // Displaying the tweet
           tweets.forEach(function (tweet) {
-            var msg = $('<div class="tweet"></div>');
-            msg.text('@' + tweet.user + ': ' + tweet.message);
+            var msg = $('<li class="tweet"><span class="username"></span><span class="message"></span><span class="time"></span></li>');
+            // msg.text('@' + tweet.user + ': ' + tweet.message);
+            msg.find('.username').text('@' + tweet.user + ': ');
+            msg.find('.message').text(tweet.message);
+            msg.find('.time').text(tweet.created_at);
             msg.prependTo($tweetList);
+          });
+
+          // Styling
+          $('.username').css({
+            "font-weight" : "Bold"
+          });
+
+          $('.time').css({
+            "font-style" : "Italic",
+            "font-size" : "10px",
+            "color" : "grey"
           });
         }
 

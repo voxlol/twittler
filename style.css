@@ -1,9 +1,11 @@
 .username {
   font-weight : Bold;
+  color : Blue;
+  cursor : Pointer;
 }
 
 .time {
-  font-style : Italic,
-  font-size : 10px,
-  color : grey
+  font-style : italic;
+  font-size : 10px;
+  color : grey;
 }

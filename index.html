@@ -10,6 +10,10 @@
       <button type="button">Get new Tweets</button>
       <ul class="tweet-list"></ul>
 
+      <div class="user-timeline">
+        <h2></h2>
+        <ul class="user-tweets"></ul>
+      </div>
     </div>
 
     <script>
@@ -34,15 +38,18 @@
             }
           }
 
-          // Displaying the tweet
-          tweets.forEach(function (tweet) {
-            var msg = $('<li class="tweet"><span class="username"></span><span class="message"></span><span class="time"></span></li>');
-            // msg.text('@' + tweet.user + ': ' + tweet.message);
-            msg.find('.username').text('@' + tweet.user + ': ');
-            msg.find('.message').text(tweet.message);
-            msg.find('.time').text(tweet.created_at);
-            msg.prependTo($tweetList);
-          });
+          function generateTweets(tweetsArr, destination){
+            tweets.forEach(function (tweet) {
+              var msg = $('<li class="tweet"><span class="username"></span><span class="message"></span><span class="time"></span></li>');
+              msg.find('.username').text('@' + tweet.user + ': ');
+              msg.find('.username').attr("user", tweet.user);
+              msg.find('.message').text(tweet.message);
+              msg.find('.time').text(tweet.created_at);
+              msg.prependTo(destination);
+            });
+          }
+
+          generateTweets(tweets, $tweetList)
 
           // Styling
           $('.username').css({
@@ -59,6 +66,19 @@
         // New Tweet Button event handler
         $('button').on("click", function(event){
           showTweets(25);
+        });
+
+        // Click on User Event Handler
+        $('.username').on('click', function(event){
+          var user = $(this).attr('user');
+          var userTweets = streams.users[user];
+          console.log(user);
+          console.log(userTweets);
+
+          // Set the header for the user tweets
+          $('.user-timeline').find('h2').text(user + ' timeline');
+
+          // Populate the user's timeline
         });
       });
     </script>

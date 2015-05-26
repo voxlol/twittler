@@ -6,13 +6,13 @@
   </head>
   <body>
     <div class="tweet-container">
-      <h2>Tweets</h2>
+      <h2>Last 15 Tweets</h2>
       <button type="button">Get new Tweets</button>
-      <ul class="tweet-list"></ul>
+      <ol class="tweet-list"></ol>
 
       <div class="user-timeline">
-        <h2></h2>
-        <ul class="user-tweets"></ul>
+        <h2><span class="tweetcount"></span></h2>
+        <ol class="user-tweets"></ol>
       </div>
     </div>
 
@@ -21,36 +21,28 @@
         // DOM element mapped to variables
         var $body = $('body');
         var $tweetList = $('.tweet-list');
+        var $userTweets = $('.user-tweets');
+        var displayAmount = 15;
+        var tweets = streams.home;
 
-        var tweets = streams.home.reverse();
-        showTweets();
+        generateTweets(tweets, $tweetList);
+        generateCSS();
 
-        function showTweets(displayAmount){
+        function generateTweets(tweetsArr, destination){
           // Clear the current display
-          $tweetList.html('');
+          destination.html('');
 
-          // Setting the amount to only display the displayAmount
-          var diff = tweets.length - displayAmount
-          if(diff > 0){
-            while(diff > 0){
-              tweets.shift();
-              diff--;
-            }
-          }
+          tweetsArr.forEach(function (tweet) {
+            var msg = $('<li class="tweet"><span class="username"></span><span class="message"></span><span class="time"></span></li>');
+            msg.find('.username').text('@' + tweet.user + ': ');
+            msg.find('.username').attr("user", tweet.user);
+            msg.find('.message').text(tweet.message);
+            msg.find('.time').text(tweet.created_at);
+            msg.prependTo(destination);
+          });
+        }
 
-          function generateTweets(tweetsArr, destination){
-            tweets.forEach(function (tweet) {
-              var msg = $('<li class="tweet"><span class="username"></span><span class="message"></span><span class="time"></span></li>');
-              msg.find('.username').text('@' + tweet.user + ': ');
-              msg.find('.username').attr("user", tweet.user);
-              msg.find('.message').text(tweet.message);
-              msg.find('.time').text(tweet.created_at);
-              msg.prependTo(destination);
-            });
-          }
-
-          generateTweets(tweets, $tweetList)
-
+        function generateCSS(){
           // Styling
           $('.username').css({
             "font-weight" : "Bold"
@@ -60,25 +52,38 @@
             "font-style" : "Italic",
             "font-size" : "10px",
             "color" : "grey"
-          });
+          });          
         }
 
         // New Tweet Button event handler
-        $('button').on("click", function(event){
-          showTweets(25);
+        $('button').on("click", function(e){
+          console.log("click the button");
+
+          // Filter to only display the displayAmount
+          var diff = tweets.length - displayAmount;
+          if(diff > 0){
+            while(diff > 0){
+              tweets.shift();
+              diff--;
+            }
+          }
+
+          generateTweets(tweets,$tweetList);
+          generateCSS();
         });
 
         // Click on User Event Handler
-        $('.username').on('click', function(event){
+        $('.tweet-list').on('click', '.username', function(e){
+          console.log('clicked username');
+
           var user = $(this).attr('user');
           var userTweets = streams.users[user];
-          console.log(user);
-          console.log(userTweets);
 
           // Set the header for the user tweets
-          $('.user-timeline').find('h2').text(user + ' timeline');
+          $('.user-timeline').find('h2').text(user + ' timeline' + ' (' + userTweets.length + ')');
 
-          // Populate the user's timeline
+          generateTweets(userTweets, $userTweets);
+          generateCSS();
         });
       });
     </script>

@@ -1,0 +1,9 @@
+.username {
+  font-weight : Bold;
+}
+
+.time {
+  font-style : Italic,
+  font-size : 10px,
+  color : grey
+}

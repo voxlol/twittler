@@ -3,11 +3,14 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
+    <div class="container">
     <div class="tweet-container">
       <h2>Last 15 Tweets</h2>
-      <button type="button">Get new Tweets</button>
+      <button type="button btn">Fetch latest</button>
       <ol class="tweet-list"></ol>
 
       <div class="user-timeline">
@@ -15,7 +18,6 @@
         <ol class="user-tweets"></ol>
       </div>
     </div>
-
     <script>
       $(document).ready(function(){
         // DOM element mapped to variables
@@ -26,7 +28,6 @@
         var tweets = streams.home;
 
         generateTweets(tweets, $tweetList);
-        generateCSS();
 
         function generateTweets(tweetsArr, destination){
           // Clear the current display
@@ -40,6 +41,8 @@
             msg.find('.time').text(tweet.created_at);
             msg.prependTo(destination);
           });
+
+          //generateCSS();
         }
 
         function generateCSS(){
@@ -69,7 +72,6 @@
           }
 
           generateTweets(tweets,$tweetList);
-          generateCSS();
         });
 
         // Click on User Event Handler
@@ -83,9 +85,9 @@
           $('.user-timeline').find('h2').text(user + ' timeline' + ' (' + userTweets.length + ')');
 
           generateTweets(userTweets, $userTweets);
-          generateCSS();
         });
       });
     </script>
+    </div>
   </body>
 </html>

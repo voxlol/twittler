@@ -9,19 +9,55 @@
 
       $(document).ready(function(){
         var $body = $('body');
-        $body.html('');
+        var tweet_container = $('<div class="tweet-container"></div>');
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
+        $body.prepend(tweet_container);   // initialize the tweet container
+
+        function getTweets(amt){
+          // INPUT : amt - the # of tweets to show
+          // Load the tweets
+          var tweets = streams.home.reverse();
+
+          var diff = tweets.length - amt;
+
+          if(diff){
+            while(diff > 0){
+              tweets.shift();
+              diff--;
+            }
+          }
+
+          return tweets;
         }
 
-      });
+        function showTweets(tweets){
+          // Input : tweets - the tweet obj
+          // Displays the tweets in the tweet-container div
+          var $tweet_container = $('.tweet-container');
+          $tweet_container.html('');
 
+          tweets.forEach(function (tweet, index) {
+            // Find current tweets displayed
+            var tweetsDisplayed = $(".tweets").length;
+
+            // Prepare the tweet
+            var msg = $('<div class="tweet"></div>').data('user', tweet.user);
+            msg.text('@' + tweet.user + ': ' + tweet.message);
+            // Append the tweet
+            msg.appendTo($tweet_container);
+
+          });
+        }
+
+        // Initial page load 
+        var tweets = getTweets();
+        showTweets(tweets);
+
+        // Get new tweets every 1500 seconds
+        setInterval(function(){
+          tweets = getTweets(10);
+          showTweets(tweets);
+        }, 1500);
     </script>
   </body>
 </html>
